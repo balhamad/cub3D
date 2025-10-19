@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: balhamad <balhamad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: balhamad <balhamad@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/12 15:50:26 by balhamad          #+#    #+#             */
-/*   Updated: 2025/10/12 19:14:35 by balhamad         ###   ########.fr       */
+/*   Updated: 2025/10/15 21:59:36 by balhamad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,13 +72,23 @@ int start_dda(t_elements *el)
 }
 void prep_for_walls(t_elements *el)
 {
+	// Calculate perpendicular wall distance to avoid fisheye effect
 	if (el->side == 0)
-		el->truewalldist = (el->map_x - el->pos_x + (1 - el->step_x) / 2) / el->raydir_x;
+		el->truewalldist = (el->map_x - el->pos_x + (1 - el->step_x) / 2) / (el->raydir_x == 0 ? 0.001 : el->raydir_x);
 	else
-		el->truewalldist = (el->map_y - el->pos_y + (1 - el->step_y) / 2) / el->raydir_y;
+		el->truewalldist = (el->map_y - el->pos_y + (1 - el->step_y) / 2) / (el->raydir_y == 0 ? 0.001 : el->raydir_y);
+	
+	// Ensure wall distance is positive and not too small
+	if (el->truewalldist <= 0.001)
+		el->truewalldist = 0.001;
+		
 	el->wall_hight = (int)(SCREEN_HEIGHT / el->truewalldist);
+	
+	// Calculate lowest and highest pixel to fill in current stripe
 	el->wall_start = -el->wall_hight / 2 + SCREEN_HEIGHT / 2;
 	el->wall_end = el->wall_hight / 2 + SCREEN_HEIGHT / 2;
+	
+	// Clamp values to screen bounds
 	if (el->wall_start < 0)
 		el->wall_start = 0;
 	if (el->wall_end >= SCREEN_HEIGHT)

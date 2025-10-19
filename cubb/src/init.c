@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tabuayya <tabuayya@student.42.fr>          +#+  +:+       +#+        */
+/*   By: balhamad <balhamad@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/12 15:51:51 by balhamad          #+#    #+#             */
-/*   Updated: 2025/10/15 17:43:00 by tabuayya         ###   ########.fr       */
+/*   Updated: 2025/10/19 16:55:10 by balhamad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,26 +60,24 @@ int init_window(t_elements *el)
 	}
 	return (1);
 }
-void	ceiling_floor(t_elements *el,int x)
+void	ceiling_floor(t_elements *el, int x)
 {
-	uint32_t color_c;
-	uint32_t color_f;
-	int y;
+    if (!el->window || x < 0 || x >= SCREEN_WIDTH)
+        return;
 
-	y = 0;
-	color_c = (el->CR << 24) | (el->CG << 16) | (el->CB << 8)|255;
-	color_f = (el->FR << 24) | (el->FG << 16) | (el->FB << 8)|255;
-	while(y < el->wall_start)
-	{
-		mlx_put_pixel(el->window, x, y, color_c);
-		y++;
-	}
-	y = el->wall_end;
-	while (y < SCREEN_HEIGHT)
-	{
-		mlx_put_pixel(el->window, x, y, color_f);
-		y++;
-	}
+    uint32_t color_c = (el->CR << 24) | (el->CG << 16) | (el->CB << 8) | 255;
+    uint32_t color_f = (el->FR << 24) | (el->FG << 16) | (el->FB << 8) | 255;
+    for (int y = 0; y < el->wall_start && y < SCREEN_HEIGHT; y++)
+    {
+        if (y >= 0)
+            mlx_put_pixel(el->window, x, y, color_c);
+    }
+
+    // Draw floor
+    for (int y = el->wall_end + 1; y < SCREEN_HEIGHT; y++)
+    {
+        mlx_put_pixel(el->window, x, y, color_f);
+    }
 }
 
 mlx_texture_t *decide_dir(t_elements *el)
@@ -108,7 +106,7 @@ void draw_textured_wall(t_elements *el,int x)
 	    texX = tex->width - texX - 1;
 	if (el->side == 1 && el->raydir_y < 0)
 	    texX = tex->width - texX - 1;
-	double step = 1.0 * tex->height / el->wall_hight;
+	double step = tex->height / el->wall_hight;
 	double texPos = (el->wall_start - SCREEN_HEIGHT / 2 + el->wall_hight / 2) * step;
 	for (int y = el->wall_start; y < el->wall_end; y++)
 	{
@@ -137,9 +135,15 @@ void move_forword(t_elements *el)
 	new_y=el->pos_y;
 	new_x += el->dir_x * MOVE_SPEED;
 	new_y += el->dir_y * MOVE_SPEED;
-	if(el->map[(int)new_y][(int)el->pos_x] != '1')
+	if (el->map[(int)new_y][(int)el->pos_x] != '1' 
+	&& el->map[(int)(new_y + 0.5)][(int)el->pos_x] != '1' 
+	&& el->map[(int)new_y][(int)(el->pos_x + 0.5)] != '1' 
+	&& el->map[(int)(new_y + 0.5)][(int)(el->pos_x + 0.5)] != '1')
 		el->pos_y = new_y;
-	if(el->map[(int)el->pos_y][(int)new_x] != '1')
+	if (el->map[(int)el->pos_y][(int)new_x] != '1' 
+	&& el->map[(int)(el->pos_y + 0.5)][(int)new_x] != '1' 
+	&& el->map[(int)el->pos_y][(int)(new_x + 0.5)] != '1' 
+	&& el->map[(int)(el->pos_y + 0.5)][(int)(new_x + 0.5)] != '1')
 		el->pos_x = new_x;
 }
 void move_back(t_elements *el)
@@ -151,9 +155,12 @@ void move_back(t_elements *el)
 	new_y=el->pos_y;
 	new_x -= el->dir_x * MOVE_SPEED;
 	new_y -= el->dir_y * MOVE_SPEED;
-	if(el->map[(int)new_y][(int)el->pos_x] != '1')
+	if (el->map[(int)new_y][(int)el->pos_x] != '1' 
+	&& el->map[(int)(new_y + 0.5)][(int)el->pos_x] != '1' 
+	&& el->map[(int)new_y][(int)(el->pos_x + 0.5)] != '1' 
+	&& el->map[(int)(new_y + 0.5)][(int)(el->pos_x + 0.5)] != '1')
 		el->pos_y = new_y;
-	if(el->map[(int)el->pos_y][(int)new_x] != '1')
+	if (el->map[(int)el->pos_y][(int)new_x] != '1' && el->map[(int)(el->pos_y + 0.5)][(int)new_x] != '1' && el->map[(int)el->pos_y][(int)(new_x + 0.5)] != '1' && el->map[(int)(el->pos_y + 0.5)][(int)(new_x + 0.5)] != '1')
 		el->pos_x = new_x;
 }
 void move_right(t_elements *el)
@@ -161,13 +168,19 @@ void move_right(t_elements *el)
 	double new_x;
 	double new_y;
 
-	new_x=el->pos_x;
-	new_y=el->pos_y;
+	new_x = el->pos_x;
+	new_y = el->pos_y;
 	new_x += el->plane_x * MOVE_SPEED;
 	new_y += el->plane_y * MOVE_SPEED;
-	if(el->map[(int)new_y][(int)el->pos_x] != '1')
+	if (el->map[(int)new_y][(int)el->pos_x] != '1' 
+	&& el->map[(int)(new_y + 0.5)][(int)el->pos_x] != '1' 
+	&& el->map[(int)new_y][(int)(el->pos_x + 0.5)] != '1' 
+	&& el->map[(int)(new_y + 0.5)][(int)(el->pos_x + 0.5)] != '1')
 		el->pos_y = new_y;
-	if(el->map[(int)el->pos_y][(int)new_x] != '1')
+	if (el->map[(int)el->pos_y][(int)new_x] != '1' 
+	&& el->map[(int)(el->pos_y + 0.5)][(int)new_x] != '1' 
+	&& el->map[(int)el->pos_y][(int)(new_x + 0.5)] != '1' 
+	&& el->map[(int)(el->pos_y + 0.5)][(int)(new_x + 0.5)] != '1')
 		el->pos_x = new_x;
 }
 void move_left(t_elements *el)
@@ -179,9 +192,15 @@ void move_left(t_elements *el)
 	new_y=el->pos_y;
 	new_x -= el->plane_x * MOVE_SPEED;
 	new_y -= el->plane_y * MOVE_SPEED;
-	if(el->map[(int)new_y][(int)el->pos_x] != '1')
+	if (el->map[(int)new_y][(int)el->pos_x] != '1' 
+	&& el->map[(int)(new_y + 0.5)][(int)el->pos_x] != '1' 
+	&& el->map[(int)new_y][(int)(el->pos_x + 0.5)] != '1' 
+	&& el->map[(int)(new_y + 0.5)][(int)(el->pos_x + 0.5)] != '1')
 		el->pos_y = new_y;
-	if(el->map[(int)el->pos_y][(int)new_x] != '1')
+	if (el->map[(int)el->pos_y][(int)new_x] != '1' 
+	&& el->map[(int)(el->pos_y + 0.5)][(int)new_x] != '1' 
+	&& el->map[(int)el->pos_y][(int)(new_x + 0.5)] != '1' 
+	&& el->map[(int)(el->pos_y + 0.5)][(int)(new_x + 0.5)] != '1')
 		el->pos_x = new_x;
 }
 void move_pos(mlx_key_data_t keydata, t_elements *el)
@@ -216,6 +235,17 @@ void rotate(t_elements *el)
 		el->plane_x = el->plane_x * cos(ROT_SPEED) - el->plane_y * sin(ROT_SPEED);
 		el->plane_y = old_plane_x * sin(ROT_SPEED) + el->plane_y * cos(ROT_SPEED);
 	}
+}
+void mouse_hook(void *param)
+{
+	t_elements *el = (t_elements *)param;
+	int32_t mouse_x;
+	int32_t mouse_y;
+	int x;
+	mlx_get_mouse_pos(el->mlx, &mouse_x, &mouse_y);
+	x = mouse_x - (SCREEN_WIDTH / 2);
+	if (x > 0)
+	
 }
 
 void keyhook(void *param)
@@ -252,11 +282,11 @@ void render(void *param)
 		x++;
 	}
 }
-
 void run(t_elements *el)
 {
 	init_window(el);
-	mlx_loop_hook(el->mlx,keyhook,el);
+	mlx_mouse_hook(el->mlx, mouse_hook, el);
+	mlx_loop_hook(el->mlx, keyhook, el);
 	mlx_loop_hook(el->mlx,render,el);
 	mlx_loop(el->mlx);
 	mlx_terminate(el->mlx);
