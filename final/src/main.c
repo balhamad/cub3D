@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: raneem <raneem@student.42.fr>              +#+  +:+       +#+        */
+/*   By: balhamad <balhamad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 15:05:57 by balhamad          #+#    #+#             */
-/*   Updated: 2025/10/13 18:10:30 by raneem           ###   ########.fr       */
+/*   Updated: 2025/10/21 21:22:18 by balhamad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ int main(int c, char **v)
 			return (1);
 		}
 		run(&elements);
-		// exit_all(&elements);
 		free_2d_array(elements.map);
 		free_textures(&elements);
 		free(elements.textures);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: balhamad <balhamad@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: balhamad <balhamad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 13:31:31 by balhamad          #+#    #+#             */
-/*   Updated: 2025/10/19 20:16:59 by balhamad         ###   ########.fr       */
+/*   Updated: 2025/10/21 18:27:44 by balhamad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,11 @@
 t_textures	*init_textures()
 {
 	t_textures *t = malloc(sizeof(t_textures));
+	if(!t)
+	{
+		ft_printf("Error\nFailed to allocate memory for textures\n");
+		return (NULL);
+	}
 	t->east = NULL;
 	t->west = NULL;
 	t->north = NULL;
@@ -37,7 +42,9 @@ int init_elements(t_elements *el)
 	(el)->copy_map = NULL;
 	(el)->map_size = 0;
 	el->textures = init_textures();
-	return 1;
+	if (!el->textures)
+		return (-1);
+	return (1);
 }
 int init_window(t_elements *el)
 {
@@ -271,28 +278,27 @@ void move_pos(mlx_key_data_t keydata, t_elements *el)
 	else if(keydata.key == MLX_KEY_A)
 		move_left(el);
 }
+
 void rotate(t_elements *el)
 {
-	double old_dir_x;
-	double old_plane_x;
+    double old_dir_x = el->dir_x;
+    double old_plane_x = el->plane_x;
+    double rot = 0.0;
 
-	old_dir_x = el->dir_x;
-	old_plane_x = el->plane_x;
-	if (mlx_is_key_down(el->mlx, MLX_KEY_LEFT))
-	{
-		el->dir_x = el->dir_x * cos(-ROT_SPEED) - el->dir_y * sin(-ROT_SPEED);
-		el->dir_y = old_dir_x * sin(-ROT_SPEED) + el->dir_y * cos(-ROT_SPEED);
-		el->plane_x = el->plane_x * cos(-ROT_SPEED) - el->plane_y * sin(-ROT_SPEED);
-		el->plane_y = old_plane_x * sin(-ROT_SPEED) + el->plane_y * cos(-ROT_SPEED);
-	}
-	else if (mlx_is_key_down(el->mlx, MLX_KEY_RIGHT))
-	{
-		el->dir_x = el->dir_x * cos(ROT_SPEED) - el->dir_y * sin(ROT_SPEED);
-		el->dir_y = old_dir_x * sin(ROT_SPEED) + el->dir_y * cos(ROT_SPEED);
-		el->plane_x = el->plane_x * cos(ROT_SPEED) - el->plane_y * sin(ROT_SPEED);
-		el->plane_y = old_plane_x * sin(ROT_SPEED) + el->plane_y * cos(ROT_SPEED);
-	}
+    if (mlx_is_key_down(el->mlx, MLX_KEY_LEFT))
+        rot -= ROT_SPEED;
+    if (mlx_is_key_down(el->mlx, MLX_KEY_RIGHT))
+        rot += ROT_SPEED;
+
+    if (rot != 0.0)
+    {
+        el->dir_x = el->dir_x * cos(rot) - el->dir_y * sin(rot);
+        el->dir_y = old_dir_x * sin(rot) + el->dir_y * cos(rot);
+        el->plane_x = el->plane_x * cos(rot) - el->plane_y * sin(rot);
+        el->plane_y = old_plane_x * sin(rot) + el->plane_y * cos(rot);
+    }
 }
+// ...existing code...
 void cursor_hook(double xpos, double ypos, void *param)
 {
 	(void)ypos;

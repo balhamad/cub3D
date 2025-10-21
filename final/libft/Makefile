@@ -39,7 +39,8 @@ SRCS = ft_isalnum.c \
 	ft_lowhexa.c\
 	ft_unsigned.c\
 	ft_uphexa.c\
-	get_next_line.c
+	get_next_line.c\
+	ft_strcmp.c
 
 CFLAGS = -Wall -Werror -Wextra
 OFILES = $(SRCS:.c=.o)

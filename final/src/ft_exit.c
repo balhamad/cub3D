@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bushra <bushra@student.42.fr>              +#+  +:+       +#+        */
+/*   By: balhamad <balhamad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:09:56 by balhamad          #+#    #+#             */
-/*   Updated: 2025/10/19 16:38:41 by bushra           ###   ########.fr       */
+/*   Updated: 2025/10/21 21:20:57 by balhamad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,8 @@ int map_exit(char ***map,t_elements *el)
 
 void free_textures(t_elements *el)
 {
+	if (!el || !el->textures)
+		return;
 	if (el->textures->north)
 		mlx_delete_texture(el->textures->north);
 	if (el->textures->south)

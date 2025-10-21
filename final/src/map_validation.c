@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map_validation.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: balhamad <balhamad@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: balhamad <balhamad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 13:16:10 by balhamad          #+#    #+#             */
-/*   Updated: 2025/10/19 16:58:58 by balhamad         ###   ########.fr       */
+/*   Updated: 2025/10/21 18:29:22 by balhamad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ int save_mapline(t_elements *el, char *line)
 	map[i + 1] = NULL;
 	free_2d_array(el->map);
 	el->map = malloc(sizeof(char *) * (el->map_size + 2));
+	if (!el->map)
+		return (map_exit(&map, el));
 	while (j < i + 1)
 	{
 		el->map[j] = ft_strdup(map[j]);
@@ -97,7 +99,11 @@ int skip_line(int fd, char **line)
 int map_validation(t_elements *elements, int fd, int count, char *line)
 {
 	if (count != 6 || !line || line[0] == '\0')
+	{
+		if (line)
+			free(line);
 		return (-1);
+	}
 	while (line && line[0] == '\n')
 	{
 		free(line);

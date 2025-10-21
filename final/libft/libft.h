@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: balhamad <balhamad@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: balhamad <balhamad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 11:19:23 by rabusala          #+#    #+#             */
-/*   Updated: 2025/10/07 14:45:42 by balhamad         ###   ########.fr       */
+/*   Updated: 2025/10/21 18:10:21 by balhamad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,4 +69,5 @@ size_t	line_length(char *str);
 char	*clean(char **array, char *ss);
 char	*read_1ine(int fd, char *array);
 char	*get_next_line(int fd);
+int		ft_strcmp(char *s1, char *s2);
 #endif

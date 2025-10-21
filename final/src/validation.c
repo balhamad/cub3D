@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bushra <bushra@student.42.fr>              +#+  +:+       +#+        */
+/*   By: balhamad <balhamad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 15:16:16 by balhamad          #+#    #+#             */
-/*   Updated: 2025/10/16 16:50:39 by bushra           ###   ########.fr       */
+/*   Updated: 2025/10/21 18:46:47 by balhamad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,17 +42,17 @@ int skip_spaces(char *line,int *i)
 }
 int	is_element(char *sub)
 {
-	if(ft_strncmp(sub,"NO",ft_strlen(sub)) == 0)
+	if(ft_strcmp(sub,"NO") == 0)
 		return (1);
-	else if (ft_strncmp(sub, "SO", ft_strlen(sub)) == 0)
+	else if (ft_strcmp(sub, "SO") == 0)
 		return (2);
-	else if (ft_strncmp(sub, "WE", ft_strlen(sub)) == 0)
+	else if (ft_strcmp(sub, "WE") == 0)
 		return (3);
-	else if (ft_strncmp(sub, "EA", ft_strlen(sub)) == 0)
+	else if (ft_strcmp(sub, "EA") == 0)
 		return (4);
-	else if (ft_strncmp(sub, "F", ft_strlen(sub)) == 0)
+	else if (ft_strcmp(sub, "F") == 0)
 		return (5);
-	else if (ft_strncmp(sub, "C", ft_strlen(sub)) == 0)
+	else if (ft_strcmp(sub, "C") == 0)
 		return (6);
 	else
 		return (0);
@@ -118,6 +118,7 @@ int update_check_arr(char **arr,int *num)
 {
 	char *tmp;
 	int ret;
+	int	i;
 
 	ret = 1;
 	tmp = ft_strdup(*arr);
@@ -127,7 +128,14 @@ int update_check_arr(char **arr,int *num)
 	*arr = ft_strtrim(tmp, " \t");
 	if (!(*arr))
 		ret = -1;
-	*num = atoi(*arr);
+	i = 0;
+	while ((*arr)[i])
+	{
+		if (!ft_isdigit((*arr)[i]))
+			ret = -1;
+		i++;
+	}
+	*num = ft_atoi(*arr);
 	if (check_num(*num,*arr) == -1)
 		ret = -1; 
 	free(tmp);
@@ -220,7 +228,7 @@ int	fill_element(t_elements *el, char *sub, char **el_str, char *line)
 	while (line[i] && line[i] != '\n')
 		i++;
 	*el_str = ft_substr(line, s, i - s);
-	if (**el_str == '\0')
+	if (*el_str == NULL || **el_str == '\0')
 		return (-1);
 	if(check_filled_element(el, sub, el_str) == -1)
 		return (-1);
@@ -261,6 +269,8 @@ int parse_line(char *line,t_elements *el,int *count)
 	i = 0;
 	s = 0;
 	skip_spaces(line, &i);
+	if(line[i] == '\n' && *count < 6)
+		return(0);
 	s = i;
 	while (line[i] && line[i] != 9 && line[i] != 32 && line[i] != '\n')
 		i++;
@@ -325,7 +335,12 @@ int check_lines(t_elements *elements,char *file)
 		line = get_next_line(fd);
 	}
 	if(line && line[0] == '\0')
+	{
+		free(line);
 		return -1;
+	}
+	// else
+	// 	free(line);
 	if (map_validation(elements, fd, count, line) == -1)
 	{
 		close(fd);
