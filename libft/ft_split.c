@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rabusala <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: balhamad <balhamad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 11:24:42 by rabusala          #+#    #+#             */
-/*   Updated: 2024/09/11 12:21:13 by rabusala         ###   ########.fr       */
+/*   Updated: 2025/11/02 18:15:43 by balhamad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static size_t	count(char const *s, char c)
 		while (*s == c)
 			s++;
 		if (*s)
-		{	
+		{
 			count++;
 			while (*s && *s != c)
 				s++;
@@ -96,4 +96,4 @@ char	**ft_split(char const *s, char c)
 	}
 	arr[i] = NULL;
 	return (arr);
-}	
+}

@@ -40,6 +40,7 @@ SRCS = ft_isalnum.c \
 	ft_unsigned.c\
 	ft_uphexa.c\
 	get_next_line.c\
+	gnl_utils.c\
 	ft_strcmp.c
 
 CFLAGS = -Wall -Werror -Wextra

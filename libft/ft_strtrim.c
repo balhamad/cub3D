@@ -3,29 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rabusala <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: balhamad <balhamad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 11:53:43 by rabusala          #+#    #+#             */
-/*   Updated: 2024/09/08 12:29:03 by rabusala         ###   ########.fr       */
+/*   Updated: 2025/11/02 18:16:55 by balhamad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-/*void	fill(char *ptr, char const *str, size_t len, size_t start)
-{
-	size_t	i;
-
-	i = 0;
-	while (i < len)
-	{
-		ptr[i] = str[start + i];
-		i++;
-	}
-	ptr[len] = '\0';
-}*/
 char	*ft_strtrim(char const *s1, char const *set)
-
 {
 	char		*ptr;
 	int			j;
@@ -44,7 +31,7 @@ char	*ft_strtrim(char const *s1, char const *set)
 			return (NULL);
 		ptr[0] = '\0';
 		return (ptr);
-	}	
+	}
 	while ((n > j) && ft_strchr(set, s1[n]))
 		n--;
 	ptr = (char *)malloc(n - j + 2);
@@ -53,10 +40,3 @@ char	*ft_strtrim(char const *s1, char const *set)
 	ft_strlcpy(ptr, &s1[j], (n - j + 2));
 	return (ptr);
 }
-/*int main()
-{
-	char const  *str= "lorem \n ipsum \t dolor \n sit \t amet";
-	char const *set = " ";
-	printf("%s", ft_strtrim(str, set));
-	return 0;
-}*/

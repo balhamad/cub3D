@@ -6,26 +6,22 @@
 /*   By: balhamad <balhamad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 15:05:57 by balhamad          #+#    #+#             */
-/*   Updated: 2025/10/29 15:32:40 by balhamad         ###   ########.fr       */
+/*   Updated: 2025/11/03 13:40:31 by balhamad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
 
+int	error_msg(char *msg)
+{
+	write(2, "Error\n", 6);
+	write(2, msg, ft_strlen(msg));
+	return (-1);
+}
+
 int	init_elements(t_elements *el)
 {
-	(el)->map_size = 0;
-	(el)->C = NULL;
-	(el)->F = NULL;
-	(el)->NO = NULL;
-	(el)->WE = NULL;
-	(el)->EA = NULL;
-	(el)->SO = NULL;
-	(el)->map = NULL;
-	(el)->CB = 0;
-	(el)->pl_flag = 0;
-	(el)->copy_map = NULL;
-	(el)->map_size = 0;
+	ft_bzero(el, sizeof(t_elements));
 	el->textures = init_textures();
 	if (!el->textures)
 		return (-1);
@@ -75,11 +71,11 @@ int	main(int c, char **v)
 {
 	t_elements	elements;
 
-	if (init_elements(&elements) == -1)
-		return (1);
 	if (c == 2)
 	{
 		if (check_extention(v[1]) == 1)
+			return (1);
+		if (init_elements(&elements) == -1)
 			return (1);
 		if (check_lines(&elements, v[1]) == -1)
 		{
